@@ -206,9 +206,10 @@ window.Webflow.push(() => {
       // Add click handler to marker element
       markerEl.addEventListener("click", (e) => {
         e.stopPropagation();
+        e.preventDefault(); // Prevent any default behavior
 
         const locationID = feature.properties.id;
-        const mockEvent = {
+        /*const mockEvent = {
           features: [
             {
               geometry: { coordinates: feature.geometry.coordinates },
@@ -222,7 +223,7 @@ window.Webflow.push(() => {
         };
 
         // Call the same functions as the original layer click
-        addPopup(mockEvent);
+        addPopup(mockEvent);*/
         updateActiveLocation(locationID);
         showMapCard(locationID);
         zoomToLocation(map, feature.geometry.coordinates);
@@ -350,7 +351,7 @@ window.Webflow.push(() => {
         const city = feature.properties.city;
 
         // Create a mock event object to pass to the addPopup function
-        const mockEvent = {
+        /*const mockEvent = {
           features: [
             {
               geometry: { coordinates: coordinates },
@@ -361,7 +362,7 @@ window.Webflow.push(() => {
         };
 
         // Add the popup to the map at the closest location
-        addPopup(mockEvent);
+        addPopup(mockEvent);*/
 
         // Update the active location in the sidebar to highlight it
         updateActiveLocation(ID);
@@ -476,7 +477,7 @@ window.Webflow.push(() => {
   };
 
   // Function to add a popup to the dot on the map. Event properties are passed from click event
-  const addPopup = function (e) {
+  /*const addPopup = function (e) {
     // Extract the coordinates of the clicked feature and create a copy of the coordinates array
     const coordinates = e.features[0].geometry.coordinates.slice();
 
@@ -503,7 +504,7 @@ window.Webflow.push(() => {
       locationMapCardClose(); // Close the detailed map card
       console.log("popup was closed"); // Log that the popup was closed
     });
-  };
+  };*/
 
   // Function to update the active item in the sidebar by adding the 'is--active' class
   const updateActiveLocation = function (locationID) {
