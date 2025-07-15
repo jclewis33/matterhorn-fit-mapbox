@@ -190,6 +190,14 @@ window.Webflow.push(() => {
     const markersArray = [];
 
     stores.features.forEach((feature) => {
+      /*if you want to use a Webflow file as an image, then use this code:
+      const svgUrl = "https://cdn.prod.website-files.com/6841ff38b70b18e98dad4513/685eaa0ddbd6ac7ecd520c5d_mhfit_marker.svg";
+
+      const markerEl = document.createElement("div");
+      markerEl.className = "location-marker";
+      markerEl.innerHTML = `<img src="${svgUrl}" alt="Location Marker" />`;
+      */
+
       // Create marker element
       const markerEl = document.createElement("div");
       markerEl.className = "location-marker";
