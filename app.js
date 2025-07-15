@@ -28,6 +28,9 @@ window.Webflow.push(() => {
   // Remove the 'is--show' class from the map card wrapper
   locationMapCardWrapper.classList.remove("is--show");
 
+  // Global markers array
+  let markers = [];
+
   // Set the Mapbox access token for authentication
   mapboxgl.accessToken =
     "pk.eyJ1Ijoia3QtbWFwLWxvY3MiLCJhIjoiY2x6bWx5ZjViMGczbTJqcHhqYmwydzF6ZSJ9.4B65REMkTCJh3bFYcaJD1A";
@@ -184,13 +187,51 @@ window.Webflow.push(() => {
 
   const addMarkersToMap = function () {
     // Create an array to store marker references
-    const markers = [];
+    const markersArray = [];
 
     stores.features.forEach((feature) => {
       // Create marker element
       const markerEl = document.createElement("div");
       markerEl.className = "location-marker";
-      markerEl.innerHTML = `[SVG CODE HERE]`;
+      markerEl.innerHTML = `
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 0C7.58 0 4 3.58 4 8C4 13.25 12 22 12 22C12 22 20 13.25 20 8C20 3.58 16.42 0 12 0ZM12 11C10.34 11 9 9.66 9 8C9 6.34 10.34 5 12 5C13.66 5 15 6.34 15 8C15 9.66 13.66 11 12 11Z" fill="#EB2D2E" stroke="#CB1F10" stroke-width="1"/>
+      </svg>
+    `;
+
+      // Add click handler to marker element
+      markerEl.addEventListener("click", (e) => {
+        e.stopPropagation();
+
+        const locationID = feature.properties.id;
+        const mockEvent = {
+          features: [
+            {
+              geometry: { coordinates: feature.geometry.coordinates },
+              properties: { city: feature.properties.city },
+            },
+          ],
+          lngLat: {
+            lng: feature.geometry.coordinates[0],
+            lat: feature.geometry.coordinates[1],
+          },
+        };
+
+        // Call the same functions as the original layer click
+        addPopup(mockEvent);
+        updateActiveLocation(locationID);
+        showMapCard(locationID);
+        zoomToLocation(map, feature.geometry.coordinates);
+      });
+
+      // Add hover effects
+      markerEl.addEventListener("mouseenter", () => {
+        markerEl.style.cursor = "pointer";
+      });
+
+      markerEl.addEventListener("mouseleave", () => {
+        markerEl.style.cursor = "";
+      });
 
       // Create the marker
       const marker = new mapboxgl.Marker(markerEl)
@@ -198,7 +239,7 @@ window.Webflow.push(() => {
         .addTo(map);
 
       // Store marker reference with location data
-      markers.push({
+      markersArray.push({
         marker: marker,
         element: markerEl,
         locationId: feature.properties.id,
@@ -207,7 +248,7 @@ window.Webflow.push(() => {
       });
     });
 
-    return markers;
+    return markersArray;
   };
 
   /////////////////////////////////////////////////////////////////////////////
@@ -529,7 +570,7 @@ window.Webflow.push(() => {
   //////////////////// EVENT LISTENERS /////////////////////////
 
   // Listens for clicks on the location layer of the map (dots on the map)
-  map.on("click", "locations", (e) => {
+  /*map.on("click", "locations", (e) => {
     // Get the location ID from the clicked feature's properties
     const locationID = e.features[0].properties.id;
 
@@ -559,7 +600,7 @@ window.Webflow.push(() => {
   // Reverses cursor style when cursor moves off the map layer "locations" (REMEMBER: Locations has the dots so when you hover off a dot, the cursor changes)
   map.on("mouseleave", "locations", () => {
     map.getCanvas().style.cursor = "";
-  });
+  });*/
 
   // Add Event Listener that closes the detailed card when the close button is clicked on the detailed card
   locationMapCardCloseBtn.forEach((btn) => {
