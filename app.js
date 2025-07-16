@@ -627,7 +627,7 @@ window.Webflow.push(() => {
     // Add a click event listener to each sidebar location item
     location.addEventListener("click", (e) => {
       //if the click was on the schedule button, then return
-      if (e.target.closet("[location-schedule-sidebar]")) return;
+      if (e.target.closest("[location-schedule-sidebar]")) return;
 
       // Get the location ID from the data-id attribute of the clicked sidebar item
       const locationID = e.currentTarget.getAttribute("data-id");
